@@ -26,7 +26,7 @@ def response(app, request):
                     f'to client: {dict_request.clent.client_id}')
     mtom = MTOM(status=200)
     mtom.file = file
-    mtom.request = dict_request.request
+    mtom.request = dict_request
     return mtom.message
 
 
@@ -63,7 +63,7 @@ class MTOM(Message):
         body = etree.SubElement(envelope, '{http://schemas.xmlsoap.org/soap/envelope/}Body')
         AttachmentRequest = etree.SubElement(body, '{http://dksu.gov.ua/mtom}AttachmentRequest', nsmap=ns)
         FileMetadata = etree.SubElement(AttachmentRequest, '{http://dksu.gov.ua/mtom}FileMetadata')
-        etree.SubElement(FileMetadata, '{http://dksu.gov.ua/mtom}FileName').text = self.file.get('file_name')
+        etree.SubElement(FileMetadata, '{http://dksu.gov.ua/mtom}FileName').text = self.request.params.file_name
         etree.SubElement(FileMetadata, '{http://dksu.gov.ua/mtom}FileType').text = self.file.get('file_mime')
         etree.SubElement(FileMetadata, '{http://dksu.gov.ua/mtom}FileMD5').text = self.file.get('file_md5')
 

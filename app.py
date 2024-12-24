@@ -46,7 +46,7 @@ def download(account, date, parttition, tag):
     return send_file(os.path.join(app.config.get('DOWNLOAD_FOLDER'), account, file_name), as_attachment=True)
 
 
-@app.route('/mtom')
+@app.route('/mtom', methods=['GET', 'POST'])
 def soap():
     if 'wsdl' in request.args.keys() and request.method == 'GET':
         return send_file(os.path.join(app.config.get('DOWNLOAD_WSDL'), 'mtom.wsdl'), as_attachment=True)

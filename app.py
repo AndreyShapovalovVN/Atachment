@@ -5,8 +5,8 @@ from flask import Flask, send_file, request
 from spyne.server.wsgi import WsgiApplication
 from werkzeug.middleware.dispatcher import DispatcherMiddleware
 
-from apps.createMessageMTOM import response
-from apps.soap_get_file import list_files, get_file
+from apps.soap_MTOM import getMTOM
+from apps.soap_listfile import list_files
 
 app = Flask(__name__)
 app.config.from_object('settings.Config')
@@ -46,21 +46,10 @@ def download(account, date, parttition, tag):
     return send_file(os.path.join(app.config.get('DOWNLOAD_FOLDER'), account, file_name), as_attachment=True)
 
 
-@app.route('/mtom', methods=['GET', 'POST'])
-def soap():
-    if 'wsdl' in request.args.keys() and request.method == 'GET':
-        return send_file(os.path.join(app.config.get('DOWNLOAD_WSDL'), 'mtom.wsdl'), as_attachment=True)
-    return response(app, request)
-
-
 app.wsgi_app = DispatcherMiddleware(
     app.wsgi_app,
-    {'/soap': WsgiApplication(get_file(app)), }
-)
-
-app.wsgi_app = DispatcherMiddleware(
-    app.wsgi_app,
-    {'/listfiles': WsgiApplication(list_files(app))}
+    {'/listfiles': WsgiApplication(list_files(app)),
+     '/mtom': WsgiApplication(getMTOM(app))}
 )
 
 if __name__ == '__main__':

@@ -11,8 +11,11 @@ from apps.model.MTOM import MTOMAttachment
 
 
 class MTOM(Soap11):
+    """
+    MTOM protocol implementation.
+    """
 
-    def __init__(self, app=None, base64=False):
+    def __init__(self, app=None):
         super().__init__(app, validator=None)
         self.FileData = b''
         self.FileName = ''
@@ -26,6 +29,12 @@ class MTOM(Soap11):
         return self.FileName
 
     def serialize(self, ctx, message):
+        """
+        Serialize the message to the output stream.
+        :param ctx:
+        :param message:
+        :return:
+        """
         super().serialize(ctx, message)
         if not ctx.out_object:
             logger_invalid.error("No out_object found.")
@@ -57,6 +66,11 @@ class MTOM(Soap11):
         logger.info('MTOM response serialize.')
 
     def create_xml_out_section(self, ctx):
+        """
+        Create the XML section of the MTOM message.
+        :param ctx:
+        :return:
+        """
         logger.debug("Creating MTOM XML section.")
         ctx.out_string.append(f'--MIMEBoundary{self.MIMEBoundary}\r\n'.encode('utf-8'))
         ctx.out_string.append('Content-Type: application/xop+xml; charset=UTF-8; type="text/xml";\r\n'.encode('utf-8'))
@@ -68,6 +82,11 @@ class MTOM(Soap11):
         ctx.out_string.append('\r\n'.encode('utf-8'))
 
     def create_data_out_section_bin(self, ctx):
+        """
+        Create the data section of the MTOM message.
+        :param ctx:
+        :return:
+        """
         ctx.out_string.append(f'--MIMEBoundary{self.MIMEBoundary}\r\n'.encode('utf-8'))
         ctx.out_string.append(f'Content-Type: {self.FileType}; name={self.FileName}\r\n'.encode('utf-8'))
         ctx.out_string.append(b'Content-Transfer-Encoding: binary\r\n')
@@ -82,6 +101,12 @@ class MTOM(Soap11):
         ctx.out_string.append(f'--MIMEBoundary{self.MIMEBoundary}--\r\n'.encode('utf-8'))
 
     def create_out_string(self, ctx, out_string_encoding=None):
+        """
+        Create the MTOM message.
+        :param ctx:
+        :param out_string_encoding:
+        :return:
+        """
         super().create_out_string(ctx, out_string_encoding)
         if not ctx.out_object:
             return
@@ -103,5 +128,11 @@ class MTOM(Soap11):
         logger.debug("MTOM message: %s", ctx.out_string)
 
     def decompose_incoming_envelope(self, ctx, message):
+        """
+        Decompose the incoming message.
+        :param ctx:
+        :param message:
+        :return:
+        """
         logger_invalid.error("This is an output-only protocol.")
         raise NotImplementedError("This is an output-only protocol.")

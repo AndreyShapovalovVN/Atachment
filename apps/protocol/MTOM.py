@@ -22,7 +22,6 @@ class MTOM(Soap11):
         self.FileType = ''
         self.cid0 = uuid.uuid4().hex
         self.MIMEBoundary = uuid.uuid4().hex
-        self.base64 = base64
 
     @property
     def cid1(self):
@@ -74,7 +73,7 @@ class MTOM(Soap11):
         logger.debug("Creating MTOM XML section.")
         ctx.out_string.append(f'--MIMEBoundary{self.MIMEBoundary}\r\n'.encode('utf-8'))
         ctx.out_string.append('Content-Type: application/xop+xml; charset=UTF-8; type="text/xml";\r\n'.encode('utf-8'))
-        ctx.out_string.append('Content-Transfer-Encoding: binary\r\n'.encode('utf-8'))
+        ctx.out_string.append('Content-Transfer-Encoding: 8bit\r\n'.encode('utf-8'))
         ctx.out_string.append(f'Content-ID: <{self.cid0}>\r\n'.encode('utf-8'))
         ctx.out_string.append('\r\n'.encode('utf-8'))
         ctx.out_string.append(

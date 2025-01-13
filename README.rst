@@ -16,7 +16,11 @@ This is a transport for Trembita (UXP, XRoad) that allows to send and receive MT
 -------------------------
 
 install the package using pip:
-`pip install git+http://gitlab.ega.ee/andrei.shapovalov/trembita-file-transport-mtom.git`
+`git clone https://github.com/AndreyShapovalovVN/Atachment.git`
 
 ** Usage **
 ----------------------------
+`
+docker build -t attachment .
+docker run -p 8080:80 attachment
+`

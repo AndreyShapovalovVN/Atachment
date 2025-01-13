@@ -25,7 +25,7 @@ class ListFile(ComplexModel):
 
 
 class ListOfFiles(ServiceBase):
-
+    __service_name__ = 'ListFiles'
     @rpc(Mandatory.String, _returns=Array(ListFile))
     def list_files(ctx, account):
         ctx.udc.logger.info(f"Request transaction-id: {ctx.transport.req_env.get('HTTP_UXP_TRANSACTION_ID')}")
@@ -44,6 +44,7 @@ class ListOfFiles(ServiceBase):
 def list_files(flask_app):
     application = Application(
         [ListOfFiles],
+        name='ListFiles',
         tns='http://dksu.gov.ua/file/listfile',
         in_protocol=Soap11(validator='lxml'),
         out_protocol=Soap11()

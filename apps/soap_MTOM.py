@@ -13,6 +13,7 @@ from apps.tools.TrembitaHeader import Client, ClientTest
 
 
 class Mtom(ServiceBase):
+    __service_name__ = 'mtom'
     @rpc(Mandatory.String, Mandatory.Date, Mandatory.Integer, Mandatory.String,
          _returns=MTOMAttachment)
     def mtom(ctx, account, date, parttition, tag):
@@ -41,6 +42,7 @@ class Mtom(ServiceBase):
 def getMTOM(flask_app):
     application = Application(
         [Mtom],
+        name='mtom',
         tns='http://dksu.gov.ua/file/download',
         in_protocol=Soap11(validator='lxml'),
         out_protocol=MTOM()

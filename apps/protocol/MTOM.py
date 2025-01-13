@@ -77,7 +77,7 @@ class MTOM(Soap11):
         ctx.out_string.append(f'Content-ID: <{self.cid0}>\r\n'.encode('utf-8'))
         ctx.out_string.append('\r\n'.encode('utf-8'))
         ctx.out_string.append(
-            etree.tostring(ctx.out_document, pretty_print=True, encoding='utf8', xml_declaration=True))
+            etree.tostring(ctx.out_document, pretty_print=True, encoding='utf-8', xml_declaration=True))
         ctx.out_string.append('\r\n'.encode('utf-8'))
 
     def create_data_out_section_bin(self, ctx):

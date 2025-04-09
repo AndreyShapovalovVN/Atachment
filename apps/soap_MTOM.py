@@ -14,7 +14,10 @@ from apps.tools.TrembitaHeader import Client, ClientTest
 
 class Mtom(ServiceBase):
     __service_name__ = 'mtom'
-    @rpc(Mandatory.String, Mandatory.Date, Mandatory.Integer, Mandatory.String,
+    @rpc(Mandatory.String(patteern='^UA\d+$'),
+         Mandatory.Date,
+         Mandatory.Integer(min=1, max=99),
+         Mandatory.String(pattern='[a-z]{3}'),
          _returns=MTOMAttachment)
     def mtom(ctx, account, date, parttition, tag):
         ctx.udc.logger.info(f"Request transaction-id: {ctx.transport.req_env.get('HTTP_UXP_TRANSACTION_ID')}")
@@ -23,7 +26,6 @@ class Mtom(ServiceBase):
         except Exception as e:
             ctx.udc.logger.error(f"Error: {e}")
             client = ClientTest(ctx.in_document, 'client')
-            # raise Fault(faultcode="Client.NoHeaders", faultstring="No headers received")
 
         ctx.udc.logger.info(f"Request client: {client.client_id}")
 

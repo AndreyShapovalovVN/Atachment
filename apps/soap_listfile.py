@@ -26,7 +26,7 @@ class ListFile(ComplexModel):
 
 class ListOfFiles(ServiceBase):
     __service_name__ = 'ListFiles'
-    @rpc(Mandatory.String, _returns=Array(ListFile))
+    @rpc(Mandatory.String(patteern='^UA\d+$'), _returns=Array(ListFile))
     def list_files(ctx, account):
         ctx.udc.logger.info(f"Request transaction-id: {ctx.transport.req_env.get('HTTP_UXP_TRANSACTION_ID')}")
         client = Client(ctx.in_document, 'client')

@@ -1,7 +1,6 @@
 import logging
-import os
 
-from flask import Flask, send_file, request
+from flask import Flask, request
 from spyne.server.wsgi import WsgiApplication
 from werkzeug.middleware.dispatcher import DispatcherMiddleware
 
@@ -36,20 +35,10 @@ def hello():  # put application's code here
 e-mail: andrei.shapovalov@ega.ee"""
 
 
-@app.route('/download/<account>/<date>/<parttition>/<tag>')
-def download(account, date, parttition, tag):
-    file_name = f'{date}_{parttition}_{tag}.zip'
-    app.logger.info(f"Request transaction-id: {request.headers.get('uxp-transaction-id')}")
-    app.logger.info(f"Request client: {request.headers.get('Uxp-Client')}")
-    app.logger.info(f"Request parametrs: {account} {date} {parttition} {tag}")
-    app.logger.info(f"Request file: {file_name}")
-    return send_file(os.path.join(app.config.get('DOWNLOAD_FOLDER'), account, file_name), as_attachment=True)
-
-
 app.wsgi_app = DispatcherMiddleware(
     app.wsgi_app,
     {'/listfiles': WsgiApplication(list_files(app)),
-     '/mtom': WsgiApplication(getMTOM(app))}
+     '/download': WsgiApplication(getMTOM(app))}
 )
 
 if __name__ == '__main__':

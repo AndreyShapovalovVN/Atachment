@@ -19,7 +19,7 @@ class Mtom(ServiceBase):
          _returns=MTOMAttachment)
     def mtom(ctx, dir: list, filename: str):
         ctx.udc.logger.info(f"Request transaction-id: {ctx.transport.req_env.get('HTTP_UXP_TRANSACTION_ID')}")
-        dir = [s for s in dir if ".." not in s]
+        dir = [s for s in dir if ".." not in s and '/' not in s]
         path_to_file = Path(ctx.udc.config.get('DOWNLOAD_FOLDER')) / '/'.join(dir) / filename
 
         if not path_to_file.exists():

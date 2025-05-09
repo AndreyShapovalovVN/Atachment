@@ -27,7 +27,7 @@ class ListOfFiles(ServiceBase):
     @rpc(Array(Unicode, min_len=1, nullable=False, patteern='(?!.*\.\.)'), _returns=Array(ListFile))
     def list_files(ctx, dir: list):
         ctx.udc.logger.info(f"Request transaction-id: {ctx.transport.req_env.get('HTTP_UXP_TRANSACTION_ID')}")
-        dir = [s for s in dir if ".." not in s]
+        dir = [s for s in dir if ".." not in s and '/' not in s]
         path = Path(ctx.udc.config.get('DOWNLOAD_FOLDER')) / '/'.join(dir)
 
         ctx.udc.logger.info(f"Request path: {path}")

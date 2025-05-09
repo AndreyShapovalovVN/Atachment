@@ -3,6 +3,7 @@ import os
 from pathlib import Path
 
 from spyne import String, Array, ComplexModel, Unicode
+from spyne.model import Fault
 from spyne.application import Application
 from spyne.decorator import rpc
 from spyne.protocol.soap import Soap11
@@ -29,7 +30,9 @@ class ListOfFiles(ServiceBase):
         ctx.udc.logger.info(f"Request transaction-id: {ctx.transport.req_env.get('HTTP_UXP_TRANSACTION_ID')}")
         dir = [s for s in dir if ".." not in s and '/' not in s]
         path = Path(ctx.udc.config.get('DOWNLOAD_FOLDER')) / '/'.join(dir)
-
+        if not path.exists():
+            ctx.udc.logger.error(f"Path: {path} is not found")
+            raise Fault(faultcode="Client.PathNotFound", faultstring=f"File {path} is not found")
         ctx.udc.logger.info(f"Request path: {path}")
         ll = os.listdir(path)
         ctx.udc.logger.info(f"List of files: {ll}")

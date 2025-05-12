@@ -17,7 +17,7 @@ class Mtom(ServiceBase):
     @rpc(Array(Unicode, min_len=1, nullable=False, patteern='(?!.*\.\.)'),
          Mandatory.String(),
          _returns=MTOMAttachment)
-    def mtom(ctx, dir: list, filename: str):
+    def get_mtom(ctx, dir: list, filename: str):
         ctx.udc.logger.info(f"Request transaction-id: {ctx.transport.req_env.get('HTTP_UXP_TRANSACTION_ID')}")
         dir = [s for s in dir if ".." not in s and '/' not in s]
         path_to_file = Path(ctx.udc.config.get('DOWNLOAD_FOLDER')) / '/'.join(dir) / filename
@@ -26,7 +26,7 @@ class Mtom(ServiceBase):
             ctx.udc.logger.error(f"File: {path_to_file} is not found")
             raise Fault(faultcode="Client.FileNotFound", faultstring=f"File {path_to_file.name} is not found")
         ctx.udc.logger.info(f"File: {path_to_file} is sending")
-        return MTOMAttachment(path=path_to_file)
+        return MTOMAttachment(path=path_to_file.as_posix())
 
 
 def getMTOM(flask_app):

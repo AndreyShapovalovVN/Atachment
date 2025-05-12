@@ -34,7 +34,7 @@ class ListOfFiles(ServiceBase):
             ctx.udc.logger.error(f"Path: {path} is not found")
             raise Fault(faultcode="Client.PathNotFound", faultstring=f"File {path} is not found")
         ctx.udc.logger.info(f"Request path: {path}")
-        ll = os.listdir(path)
+        ll = os.listdir(path.as_posix())
         ctx.udc.logger.info(f"List of files: {ll}")
         for file_name in ll:
             yield ListFile(Name=file_name)
